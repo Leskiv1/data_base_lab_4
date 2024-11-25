@@ -1,12 +1,11 @@
 # coding: utf-8
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, String, Table
+from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, String, Table, Text, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import MEDIUMTEXT
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 metadata = Base.metadata
-
 
 class Objects(Base):
     __tablename__ = 'Objects'
@@ -65,6 +64,7 @@ class Rooms(Base):
 
     Objects = relationship('Objects')
     Zoness = relationship('Zones', secondary='Zones_has_Rooms')
+    Sensors = relationship('Sensors', secondary='SensorRoom', back_populates='Rooms')
 
 
 class Zones(Base):
@@ -98,6 +98,7 @@ class Sensors(Base):
     status = Column(String(45))
 
     Rooms = relationship('Rooms')
+    Rooms = relationship('Rooms', secondary='SensorRoom', back_populates='Sensors')
 
 
 t_Zones_has_Rooms = Table(
@@ -156,3 +157,9 @@ class UsersHasProcessedNotification(Base):
 
     Processed_Notification = relationship('ProcessedNotification')
     Users = relationship('Users')
+
+t_SensorRoom = Table(
+    'SensorRoom', Base.metadata,
+    Column('sensor_id', ForeignKey('Sensors.id'), primary_key=True, nullable=False),
+    Column('room_id', ForeignKey('Rooms.id'), primary_key=True, nullable=False)
+)
