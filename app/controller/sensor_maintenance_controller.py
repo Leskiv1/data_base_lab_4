@@ -8,37 +8,37 @@ sensor_bp = Blueprint('sensor', __name__)
 sensor_dao = SensorDAO(db)
 sensor_service = SensorService(sensor_dao)
 
-
-@sensor_bp.route('/sensors/sensor/maintenance', methods=['POST'])
-def insert_sensor_maintenance():
+@sensor_bp.route('/table/insert', methods=['POST'])
+def insert_into_table():
     data = request.get_json()
-    sensor_id = data['sensor_id']
-    maintenance_date = data['maintenance_date']
-    details = data['details']
+    table_name = data['table_name']
+    column_names = data['column_names']
+    values_list = data['values_list']
 
     try:
-        # Викликаємо DAO метод для вставки даних
-        sensor_service.insert_sensor_maintenance(sensor_id, maintenance_date, details)
-        return jsonify({'message': 'Sensor maintenance record inserted!'}), 201
+        sensor_service.insert_into_table(table_name, column_names, values_list)
+        return jsonify({'message': 'Data inserted successfully!'}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 50
+
+
+
+@sensor_bp.route('/zones/rooms/associate', methods=['POST'])
+def insert_zone_room_association():
+    data = request.get_json()
+    room_name = data['room_name']
+    zone_name = data['zone_name']
+
+    try:
+        # Викликаємо сервіс для вставки зв'язку між кімнатою і зоною
+        sensor_service.insert_zone_room_association(room_name, zone_name)
+        return jsonify({'message': 'Room and Zone association created successfully!'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
-@sensor_bp.route('/sensor/room', methods=['POST'])
-def insert_sensor_room_connection():
-    data = request.get_json()
 
-    # Отримання sensor_type і room_name з JSON-запиту
-    sensor_type = data['sensor_type']
-    room_name = data['room_name']
-
-    # Виклик сервісу для вставки зв'язку між сенсором та кімнатою
-    sensor_service.insert_sensor_room_connection(sensor_type, room_name)
-
-    return jsonify({'message': 'Sensor-room connection created!'}), 201
-
-
-@sensor_bp.route('/sensor/maintenance/multiple', methods=['POST'])
+@sensor_bp.route('/insert/multiple/maintenance', methods=['POST'])
 def insert_multiple_maintenance():
     data = request.get_json()
     sensor_id = data['sensor_id']
@@ -48,7 +48,7 @@ def insert_multiple_maintenance():
 
 
 
-@sensor_bp.route('/sensor/maintenance/avg_length', methods=['GET'])
+@sensor_bp.route('/avg_length', methods=['GET'])
 def get_avg_maintenance_length():
     # Викликаємо DAO метод для отримання середнього значення довжини
     result = sensor_service.get_avg_maintenance_length()
@@ -59,7 +59,7 @@ def get_avg_maintenance_length():
         return jsonify({'error': 'No data found'}), 404
 
 
-@sensor_bp.route('/sensor/tables/random', methods=['POST'])
+@sensor_bp.route('/tables/random', methods=['POST'])
 def create_random_sensor_tables():
     result = sensor_service.create_random_sensor_tables()
     if result:

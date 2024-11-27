@@ -3,15 +3,19 @@ class SensorDAO:
     def __init__(self, db):
         self.db = db
 
-    def insert_sensor_maintenance(self, sensor_id, maintenance_date, details):
+    def insert_into_table(self, table_name, column_names, values_list):
         # Використовуємо SQLAlchemy для виконання збереженої процедури
-        query = text("CALL insert_sensor_maintenance(:sensor_id, :maintenance_date, :details)")
-        self.db.session.execute(query, {'sensor_id': sensor_id, 'maintenance_date': maintenance_date, 'details': details})
+        query = text("CALL InsertIntoTable(:table_name, :column_names, :values_list)")
+        self.db.session.execute(query, {
+            'table_name': table_name,
+            'column_names': column_names,
+            'values_list': values_list
+        })
         self.db.session.commit()
 
-    def insert_sensor_room_connection(self, sensor_type, room_name):
-        query = text("CALL insert_sensor_room_connection(:sensor_type, :room_name)")
-        self.db.session.execute(query, {'sensor_type': sensor_type, 'room_name': room_name})
+    def insert_zone_room_association(self, room_name, zone_name):
+        query = text("CALL InsertZoneRoomAssociation(:room_name, :zone_name)")
+        self.db.session.execute(query, {'room_name': room_name, 'zone_name': zone_name})
         self.db.session.commit()
 
     def insert_multiple_maintenance(self, sensor_id):
