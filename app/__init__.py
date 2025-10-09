@@ -7,7 +7,7 @@ def create_app():
     app = Flask(__name__)
 
     # Налаштування підключення до бази даних
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Nazar123000=(@localhost:3306/mydb'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:qwerty1234@cloud-database-1.czsmekws60og.eu-north-1.rds.amazonaws.com:3306/tripadvisor2'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Ініціалізація SQLAlchemy з додатком
