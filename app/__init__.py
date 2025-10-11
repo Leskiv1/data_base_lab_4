@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flasgger import Swagger
 
 db = SQLAlchemy()
 
@@ -9,6 +10,22 @@ def create_app():
     # Налаштування підключення до бази даних
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:qwerty1234@cloud-database-1.czsmekws60og.eu-north-1.rds.amazonaws.com:3306/tripadvisor2'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # Налаштування Swagger
+    app.config['SWAGGER'] = {
+        'title': 'Database Lab 4 API',
+        'uiversion': 3,
+        'version': '1.0',
+        'description': 'API documentation for Database Lab 4 project',
+        'termsOfService': '',
+        'contact': {
+            'name': 'API Support',
+            'email': 'support@example.com'
+        }
+    }
+
+    # Ініціалізація Swagger
+    Swagger(app)
 
     # Ініціалізація SQLAlchemy з додатком
     db.init_app(app)
