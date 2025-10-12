@@ -18,18 +18,31 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/github-actions-key
           chmod 600 ~/.ssh/github-actions-key
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/github-actions-key
-          ssh-add -l
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy
+      - name: Deploy to EC2
         run: |
           ssh -i ~/.ssh/github-actions-key -o StrictHostKeyChecking=no admin@${{ secrets.EC2_HOST }} << 'EOF'
-          cd ./TripAdvisor
+          cd ~/data_base_lab_4 || exit 1
+          
+          # Pull latest changes
           git pull origin main
-          sudo docker build -t tripadvisor:latest .
-          sudo docker stop tripadvisor_app || true
-          sudo docker rm tripadvisor_app || true
-          sudo docker run -d --name tripadvisor_app -p 5000:5000 tripadvisor:latest
-
+          
+          # Build Docker image
+          sudo docker build -t data_base_lab_4:latest .
+          
+          # Stop and remove old container
+          sudo docker stop data_base_lab_4_app || true
+          sudo docker rm data_base_lab_4_app || true
+          
+          # Run new container
+          sudo docker run -d \
+            --name data_base_lab_4_app \
+            -p 5000:5000 \
+            --restart unless-stopped \
+            data_base_lab_4:latest
+          
+          # Clean up old images
+          sudo docker image prune -f
+          
           EOF

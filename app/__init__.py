@@ -8,7 +8,7 @@ def create_app():
     app = Flask(__name__)
 
     # Налаштування підключення до бази даних
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:qwerty1234@cloud-database-1.czsmekws60og.eu-north-1.rds.amazonaws.com:3306/tripadvisor2'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:dodkolox@database-1.clg8si4627g0.eu-north-1.rds.amazonaws.com/mydb'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Налаштування Swagger
