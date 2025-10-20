@@ -4,30 +4,10 @@ from app.services.objects_service import ObjectsService
 
 objects_bp = Blueprint('objects', __name__)
 
-@objects_bp.route('/objects', methods=['GET'])
-def get_all_objects():
-    """
-    Get all objects
-    ---
-    tags:
-      - Objects
-    responses:
-      200:
-        description: List of all objects
-        schema:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              object_name:
-                type: string
-              location:
-                type: string
-    """
-    objects = ObjectsService.get_all_objects()
-    return jsonify([obj.to_dict() for obj in objects]), 200
+# @objects_bp.route('/objects', methods=['GET'])
+# def get_all_objects():
+#     objects = ObjectsService.get_all_objects()
+#     return jsonify([obj.to_dict() for obj in objects]), 200
 
 @objects_bp.route('/objects/<int:object_id>', methods=['GET'])
 def get_object_by_id(object_id):
