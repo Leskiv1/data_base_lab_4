@@ -46,8 +46,5 @@ def create_app():
     app.register_blueprint(rooms_bp, url_prefix='/api')
     app.register_blueprint(sensor_bp, url_prefix='/api')
 
-    @app.route("/health", methods=["GET"])
-    def health():
-        return {"status": "ok"}, 200
 
     return app
